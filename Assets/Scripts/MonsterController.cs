@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using UnityStandardAssets.Characters.ThirdPerson;
 
 public class MonsterController : MonoBehaviour
 {
@@ -8,35 +7,27 @@ public class MonsterController : MonoBehaviour
 
     public NavMeshAgent agent;
 
-    public ThirdPersonCharacter character;
+    public GameObject character;
+
+    public GameObject player;
 
     private void Start()
     {
-        agent.updateRotation = false;
+        agent.updateRotation = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                // MOVE AGENT
-                agent.SetDestination(hit.point);
-            }
-        }
+        agent.SetDestination(player.transform.position);
 
         if (agent.remainingDistance > agent.stoppingDistance)
         {
-            character.Move(agent.desiredVelocity, false, false);
+            character.transform.position += agent.desiredVelocity * Time.deltaTime;
         }
         else
         {
-            character.Move(Vector3.zero, false, false);
+            character.transform.position += new Vector3(0f, 0f, 0f);
         }
     }
 }
